@@ -6,11 +6,22 @@ const errorMiddleware = require('./middlewares/errors')
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
 
+// catching uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.log(`error: ${error.message}`)
+    console.log('shutting down the server due to uncaught exception')
+    process.exit(1)
+})
+
+
 // gettin api config vars
 const PORT = process.env.PORT
 const LISTENING_IP = process.env.LISTENING_IP
 
 job_api.use(express.json())
+
+
+
 
 
 // importing routes
@@ -23,7 +34,8 @@ conn_one()
 
 
 
-// 
+
+// welcome route
 jobs.get('/', (req, res, next) => {
     res.status(200).send({
         success: true,
@@ -60,3 +72,5 @@ process.on('unhandledRejection', (error) => {
     })
 })
 
+
+console.log(test_var)
