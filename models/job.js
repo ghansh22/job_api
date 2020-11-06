@@ -114,8 +114,10 @@ const jobSchema = new mongoose.Schema({
     applicantsApplied : {
         type : [Object],
         select : false
-    }
-    
+    },
+    __v : {
+        select: false
+    }    
 });
 
 // user : {
