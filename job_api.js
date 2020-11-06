@@ -10,11 +10,7 @@ dotenv.config({ path: './configs/api_configs.env' })
 const PORT = process.env.PORT
 const LISTENING_IP = process.env.LISTENING_IP
 
-// process.env.NODE_ENV= "development"
-
 job_api.use(express.json())
-
-
 
 
 // importing routes
@@ -45,9 +41,22 @@ jobs.get('*', (req, res, next) => {
     next()
 })
 
+// always have it at the end of all routes 
 job_api.use(errorMiddleware)
+
 // listen on the api
-job_api.listen(PORT, LISTENING_IP, (error) => {
+const server = job_api.listen(PORT, LISTENING_IP, (error) => {
     if (error) return console.log(`failed to start the jon api ${error}`)
     console.log(`job api is listening on ${LISTENING_IP}:${PORT}`)
 })
+
+// handling unhanbdledpromise rejections
+// something very critical is happening, needs to close server
+process.on('unhandledRejection', (error) => {
+    console.log(`error: ${error.message}`)
+    console.log('shutting down the server due to unhandled promise rejection')
+    server.close(() => {
+        process.exit(1)
+    })
+})
+
