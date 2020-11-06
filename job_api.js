@@ -7,6 +7,8 @@ const Errorhandler = require('./utils/errorHandler')
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
 
+process.env.NODE_ENV = "production"
+
 // catching uncaught exceptions
 process.on('uncaughtException', (error) => {
     console.log(`error: ${error.message}`)
