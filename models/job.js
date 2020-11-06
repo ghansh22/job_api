@@ -44,7 +44,7 @@ const jobSchema = new mongoose.Schema({
         required : [true, 'Please add Company name.']
     },
     industry : {
-        type : [String],
+        type : String,
         required : [true , 'Please enter industry for this job.'],
         enum : {
             values : [
