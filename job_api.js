@@ -2,6 +2,7 @@ const express = require('express')
 const job_api = express()
 const dotenv = require('dotenv')
 const errorMiddleware = require('./middlewares/errors')
+const Errorhandler = require('./utils/errorHandler')
 
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
@@ -18,19 +19,16 @@ process.on('uncaughtException', (error) => {
 const PORT = process.env.PORT
 const LISTENING_IP = process.env.LISTENING_IP
 
+// connecting db one
+const { conn_one } = require('./configs/database')
+conn_one()
+
 job_api.use(express.json())
-
-
-
 
 
 // importing routes
 const jobs = require('./routes/jobs')
 job_api.use('/api/v1', jobs)
-
-// connecting db one
-const { conn_one } = require('./configs/database')
-conn_one()
 
 
 
@@ -45,12 +43,8 @@ jobs.get('/', (req, res, next) => {
 })
 
 // handling non indetified routes
-jobs.get('*', (req, res, next) => {
-    res.status(404).send({
-        success: false,
-        message: `could not find ${req.url}`
-    })
-    next()
+jobs.all('*', (req, res, next) => {
+    next(new Errorhandler(`${req.url} route not found`))
 })
 
 // always have it at the end of all routes 
@@ -72,5 +66,5 @@ process.on('unhandledRejection', (error) => {
     })
 })
 
-
-console.log(test_var)
+// creating uncaught exception
+// console.log(test_var)
