@@ -9,6 +9,8 @@ dotenv.config({path: './configs/api_configs.env'})
 const PORT = process.env.PORT
 const LISTENING_IP = process.env.LISTENING_IP
 
+job_api.use(express.json())
+
 // importing routes
 const jobs = require('./routes/jobs')
 job_api.use('/api/v1', jobs)
@@ -17,11 +19,13 @@ job_api.use('/api/v1', jobs)
 const { conn_one } = require('./configs/database')
 conn_one()
 
+
+
 // 
 jobs.get('/', (req,res,next) => {
     res.status(200).send({
-        msg: 'success',
-        descn: 'welcome to job api'
+        success: true,
+        message: 'welcome to job api'
     })
     next()
 })
@@ -29,8 +33,8 @@ jobs.get('/', (req,res,next) => {
 // handling non indetified routes
 jobs.get('*', (req,res,next) => {
     res.status(404).send({
-        msg: 'failure',
-        descn: `could not find ${req.url}` 
+        success: false,
+        message: `could not find ${req.url}` 
     })
     next()
 })

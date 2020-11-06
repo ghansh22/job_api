@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 exports.conn_one = () => {
     mongoose.connect(process.env.DB_LOCAL_URI_ONE, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
         // useCreateIndex: true
     }).then(conn => {
         // console.log(conn.connection)

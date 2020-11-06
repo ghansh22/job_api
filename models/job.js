@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
+const slugify = require('slugify')
+const geoCoder = require('../utils/geocoder')
 
 const jobSchema = new mongoose.Schema({
     title : {
@@ -111,10 +114,38 @@ const jobSchema = new mongoose.Schema({
     applicantsApplied : {
         type : [Object],
         select : false
-    },
-    user : {
-        type : mongoose.Schema.ObjectId,
-        ref : 'User',
-        required : true
+    }
+    
+});
+
+// user : {
+//     type : mongoose.Schema.ObjectId,
+//     ref : 'User',
+//     required : true
+// }
+
+
+// as this keyword requiredm using normal function
+jobSchema.pre('save', function(next){
+    //creating slud before saving to database
+    this.slug = slugify(this.title, {lower: true});
+
+    next();
+})
+
+// Setting up Location
+jobSchema.pre('save', async function(next) {
+    const loc = await geoCoder.geocode(this.address);
+
+    this.location = {
+        type : 'Point',
+        coordinates : [loc[0].longitude, loc[0].latitude],
+        formattedAddress : loc[0].formattedAddress,
+        city : loc[0].city,
+        state : loc[0].stateCode,
+        zipcode : loc[0].zipcode,
+        country : loc[0].countryCode
     }
 });
+
+module.exports = mongoose.model('Job', jobSchema)
