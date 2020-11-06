@@ -1,7 +1,12 @@
 const Job = require('../models/job')
 const geoCoder = require('../utils/geocoder')
+const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
+let { response_error } = require('../utils/response')
+const ErrorHandler = require('../utils/errorHandler')
 
-exports.getJobs = async (req, res, next) => {
+
+
+exports.getJobs = catchAsyncErrors(async (req, res, next) => {
     const jobs = await Job.find({})
 
     res.status(200).send({
@@ -9,20 +14,20 @@ exports.getJobs = async (req, res, next) => {
         msg: 'jobs found',
         data: jobs
     })
-}
+})
 
 // create a new job => 
-exports.newJob = async (req, res, next) => {
+exports.newJob = catchAsyncErrors(async (req, res, next) => {
     const job = await Job.create(req.body)
 
     res.status(200).send({
         success: true,
         msg: 'job created',
     })
-}
+})
 
 // search job within provided radius
-exports.jobsInRadius = async (req, res, next) => {
+exports.jobsInRadius = catchAsyncErrors(async (req, res, next) => {
     const {zipcode, distance} = req.params
     
     // getting lat and long from geocoder using zipcode
@@ -45,17 +50,15 @@ exports.jobsInRadius = async (req, res, next) => {
     })
 
 
-}
+})
 
 // update a job by _id
-exports.updateJob = async (req, res, next) => {
+exports.updateJob = catchAsyncErrors(async (req, res, next) => {
     let job = await Job.findById(req.params.id)
 
     if(!job) {
-        return res.status.send({
-            success: false,
-            message: 'job not found'
-        })
+        return next(new ErrorHandler('Job not found', 404))
+        // return response_error(res, 404, 'job not found')
     }
 
     job = await Job.findByIdAndUpdate(req.params.id, req.body, {
@@ -69,17 +72,14 @@ exports.updateJob = async (req, res, next) => {
         message: 'job is updated',
         data: job
     })
-}
+})
 
 
-exports.deleteJob = async (req, res, next) => {
+exports.deleteJob = catchAsyncErrors(async (req, res, next) => {
     let job = await Job.findById(req.params.id)
 
     if(!job) {
-        return res.status.send({
-            success: false,
-            message: 'job not found'
-        })
+        return response_error(res, 404, 'job not found')
     }
 
     job = await Job.findByIdAndDelete(req.params.id)
@@ -88,16 +88,13 @@ exports.deleteJob = async (req, res, next) => {
         success: true, 
         message: `job with id ${req.params.id} deleted successfully`
     })
-}
+})
 
-exports.getJob = async (req,res,next) => {
+exports.getJob = catchAsyncErrors(async (req,res,next) => {
     let job = await Job.findById(req.params.id)
 
     if(!job) {
-        return res.status.send({
-            success: false,
-            message: 'job not found'
-        })
+        return response_error(res, 404, 'job not found')
     }
 
     res.status(200).json({
@@ -105,4 +102,4 @@ exports.getJob = async (req,res,next) => {
         message: 'job found',
         data: job
     })
-}
+})

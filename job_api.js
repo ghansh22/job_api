@@ -1,15 +1,21 @@
 const express = require('express')
 const job_api = express()
 const dotenv = require('dotenv')
+const errorMiddleware = require('./middlewares/errors')
 
 // setting up api config 
-dotenv.config({path: './configs/api_configs.env'})
+dotenv.config({ path: './configs/api_configs.env' })
 
 // gettin api config vars
 const PORT = process.env.PORT
 const LISTENING_IP = process.env.LISTENING_IP
 
+// process.env.NODE_ENV= "development"
+
 job_api.use(express.json())
+
+
+
 
 // importing routes
 const jobs = require('./routes/jobs')
@@ -22,7 +28,7 @@ conn_one()
 
 
 // 
-jobs.get('/', (req,res,next) => {
+jobs.get('/', (req, res, next) => {
     res.status(200).send({
         success: true,
         message: 'welcome to job api'
@@ -31,14 +37,15 @@ jobs.get('/', (req,res,next) => {
 })
 
 // handling non indetified routes
-jobs.get('*', (req,res,next) => {
+jobs.get('*', (req, res, next) => {
     res.status(404).send({
         success: false,
-        message: `could not find ${req.url}` 
+        message: `could not find ${req.url}`
     })
     next()
 })
 
+job_api.use(errorMiddleware)
 // listen on the api
 job_api.listen(PORT, LISTENING_IP, (error) => {
     if (error) return console.log(`failed to start the jon api ${error}`)
