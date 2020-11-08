@@ -44,7 +44,7 @@ const jobSchema = new mongoose.Schema({
         required : [true, 'Please add Company name.']
     },
     industry : {
-        type : String,
+        type : [String],
         required : [true , 'Please enter industry for this job.'],
         enum : {
             values : [
@@ -150,4 +150,7 @@ jobSchema.pre('save', async function(next) {
     }
 });
 
-module.exports = mongoose.model('Job', jobSchema)
+const myDb = mongoose.connection.useDb(process.env.DB_ONE)
+
+module.exports = myDb.model('Job', jobSchema)
+// module.exports = mongoose.model('Job', jobSchema)
