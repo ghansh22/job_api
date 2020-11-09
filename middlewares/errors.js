@@ -30,6 +30,12 @@ module.exports = (err, req, res, next) => {
             error = new ErrorHandler(message, 400)
         }
 
+        
+
+        if (err.code == 11000) {
+            const message = `${err}`
+            error = new ErrorHandler(message, 500)
+        }
 
 
 

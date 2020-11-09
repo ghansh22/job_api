@@ -30,13 +30,14 @@ job_api.use(express.json())
 
 // importing routes
 const jobs = require('./routes/jobs')
+const auth = require('./routes/auth')
 job_api.use('/api/v1', jobs)
-
+job_api.use('/api/v1',auth)
 
 
 
 // welcome route
-jobs.get('/', (req, res, next) => {
+job_api.get('/', (req, res, next) => {
     res.status(200).send({
         success: true,
         message: 'welcome to job api'
@@ -45,7 +46,7 @@ jobs.get('/', (req, res, next) => {
 })
 
 // handling non indetified routes
-jobs.all('*', (req, res, next) => {
+job_api.all('*', (req, res, next) => {
     next(new Errorhandler(`${req.url} route not found`))
 })
 
