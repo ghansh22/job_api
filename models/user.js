@@ -48,5 +48,10 @@ userSchema.methods.getJwtToken = function () {
     })
 }
 
+// compare password
+userSchema.methods.comparePassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password)
+}
+
 const myDb = mongoose.connection.useDb(process.env.DB_ONE)
 module.exports = myDb.model('User', userSchema)
