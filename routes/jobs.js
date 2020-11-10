@@ -10,12 +10,14 @@ const {
     deleteJob
  } = require('../controllers/jobsController')
 
+const { isAutheticatedUser } = require('../middlewares/auth')
+
 router.route('/jobs').get(getJobs)
 router.route('/jobs/:zipcode/:distance').get(jobsInRadius)
-router.route('/job/new').post(newJob)
+router.route('/job/new').post(isAutheticatedUser, newJob)
 router.route('/job/:id')
-    .put(updateJob)
-    .delete(deleteJob)
+    .put(isAutheticatedUser, updateJob)
+    .delete(isAutheticatedUser, deleteJob)
     .get(getJob)
 
     
