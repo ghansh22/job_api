@@ -22,7 +22,7 @@ const isAutheticatedUser = catchAsyncErrors( async (req, res, next) => {
 })
 
 // handling users roles
-const authorizedRoles = (...roles) => {
+const authorizedRoles = (roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
             return next(new ErrorHandler(`role ${req.user.role} is not allowed access this resourse`, 403))

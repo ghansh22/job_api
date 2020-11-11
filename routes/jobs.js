@@ -14,10 +14,10 @@ const { isAutheticatedUser, authorizedRoles } = require('../middlewares/auth')
 
 router.route('/jobs').get(getJobs)
 router.route('/jobs/:zipcode/:distance').get(jobsInRadius)
-router.route('/job/new').post(isAutheticatedUser, authorizedRoles('employer', 'admin'), newJob)
+router.route('/job/new').post(isAutheticatedUser, authorizedRoles(['employer', 'admin']), newJob)
 router.route('/job/:id')
-    .put(isAutheticatedUser, updateJob)
-    .delete(isAutheticatedUser, deleteJob)
+    .put(isAutheticatedUser, authorizedRoles(['employer', 'admin']), updateJob)
+    .delete(isAutheticatedUser, authorizedRoles(['employer', 'admin']), deleteJob)
     .get(getJob)
 
     
