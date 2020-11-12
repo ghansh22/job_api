@@ -4,6 +4,7 @@ const { response_success, response_error } = require('../utils/response')
 const ErrorHandler = require('../utils/errorHandler')
 const { sendToken } = require('../utils/jwtTokens')
 const sendEmail = require('../utils/sendEmail')
+const crypto = require('crypto')  
 
 // register a new user
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -96,4 +97,27 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 })
 
 // Reset password 
-// exports.resetPassword
+exports.resetPassword = catchAsyncErrors( async (req, res, next) => {
+    // hash url token 
+    const resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(req.params.token)
+        .digest('hex')
+
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: {'$gt': Date.now()}
+    })
+
+    if (!user) {
+        return next(new ErrorHandler('password reset token in invalid', 400))
+    }
+
+    // reset the password
+    user.password = req.body.password
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpire = undefined
+    await user.save()
+
+    sendToken(user, 200, res)
+})
