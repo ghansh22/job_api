@@ -20,7 +20,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-
+// user login {{DOMAIN}}/api/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     // res.send('ok')
     const { email, password } = req.body
@@ -52,7 +52,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
 })
 
-
+// forgot password /api/v1/password/reset
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
 
@@ -94,3 +94,6 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     }
 
 })
+
+// Reset password 
+// exports.resetPassword

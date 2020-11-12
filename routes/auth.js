@@ -8,6 +8,6 @@ const {
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
-router.route('/password/reset').post(forgotPassword)
+router.route('/password/forgot').post(forgotPassword)
 
 module.exports = router
