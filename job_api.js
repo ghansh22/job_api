@@ -10,11 +10,11 @@ dotenv.config({ path: './configs/api_configs.env' })
 // process.env.NODE_ENV = "production"
 
 // catching uncaught exceptions
-process.on('uncaughtException', (error) => {
-    console.log(`error: ${error.message}`)
-    console.log('shutting down the server due to uncaught exception')
-    process.exit(1)
-})
+// process.on('uncaughtException', (error) => {
+//     console.log(`error: ${error.message}`)
+//     console.log('shutting down the server due to uncaught exception')
+//     process.exit(1)
+// })
 
 
 // gettin api config vars

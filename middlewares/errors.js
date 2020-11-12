@@ -17,6 +17,17 @@ module.exports = (err, req, res, next) => {
 
         error.message = err.message
 
+        // if invalid json web token
+        if (err.name === 'JsonWebTokenError') {
+            const message = `invalid json web token`
+            error = new ErrorHandler(message, 404)
+        }
+
+        // handling expired json web token
+        if (err.name === 'TokenExpiredError') {
+            const message = `json web token expired, please relogin`
+            error = new ErrorHandler(message, 401)
+        }
 
         // wrong mongoid error handling
         if (err.name === 'CastError') {
