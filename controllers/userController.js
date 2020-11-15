@@ -3,7 +3,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
 const ErrorHandler = require('../utils/errorHandler')
 const { sendToken } = require('../utils/jwtTokens')
 
-// Get current user profile
+// Get current user profile: route[GET] {{DOMAIN}}/api/v1/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findOne({ "_id": req.user.id }, { "_id": 0 })
 
@@ -13,6 +13,7 @@ exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+// update password route[PUT] : {{DOMAIN}}/api/v1/password/update
 exports.updateCurrentUserPassword = catchAsyncErrors(async (req, res, next) => {
     // by default password is deselected by the user model, here we need it to compare the password
     const user = await User.findById(req.user.id).select('+password');
@@ -31,6 +32,7 @@ exports.updateCurrentUserPassword = catchAsyncErrors(async (req, res, next) => {
     sendToken(user, 200, res)
 })
 
+// update user route[PUT]: {{DOMAIN}}/api/v1/me/update
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     const newUserData = {
         name: req.body.name,
@@ -49,7 +51,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-
+// Delete user route [DELETE]: {{DOMAIN}}/api/v1/me/delete
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findByIdAndDelete(req.user.id)
 
@@ -62,6 +64,4 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: 'user deleted successfully'
     })
-
-
 })

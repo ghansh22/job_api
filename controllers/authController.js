@@ -96,7 +96,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
 })
 
-// Reset password  /api/v1/password/reset/:params
+// Reset password [POST]  /api/v1/password/reset/:params
 exports.resetPassword = catchAsyncErrors( async (req, res, next) => {
     // hash url token 
     const resetPasswordToken = crypto
@@ -123,7 +123,7 @@ exports.resetPassword = catchAsyncErrors( async (req, res, next) => {
 })
 
 
-// logout user  =>      /api/v1/logout
+// logout user  route[GET]    /api/v1/logout
 exports.logout = catchAsyncErrors(async (req, res, next) => {
     res.cookie('token', 'none', {
         expires : new Date(Date.now()),

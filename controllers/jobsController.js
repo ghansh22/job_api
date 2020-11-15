@@ -5,7 +5,7 @@ let { response_error } = require('../utils/response')
 const ErrorHandler = require('../utils/errorHandler')
 const path = require('path')
 
-
+// get all jobs route[GET]: {{DOMAIN}}/api/v1/jobs
 exports.getJobs = catchAsyncErrors(async (req, res, next) => {
     const jobs = await Job.find({})
 
@@ -16,7 +16,7 @@ exports.getJobs = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-// create a new job => 
+// create a new job route [POST]: {{DOMAIN}}/api/v1/job/new
 exports.newJob = catchAsyncErrors(async (req, res, next) => {
     req.body.user = req.user.id
     const job = await Job.create(req.body)
@@ -28,7 +28,7 @@ exports.newJob = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-// search job within provided radius
+// search job within provided radius : route [GET]: {{DOMAIN}}/api/v1/jobs/61469/55 
 exports.jobsInRadius = catchAsyncErrors(async (req, res, next) => {
     const { zipcode, distance } = req.params
 
@@ -54,7 +54,7 @@ exports.jobsInRadius = catchAsyncErrors(async (req, res, next) => {
 
 })
 
-// update a job by _id
+// update a job by _id route [PUT] : {{DOMAIN}}/api/v1/job/5fab57478af755797398165b 
 exports.updateJob = catchAsyncErrors(async (req, res, next) => {
     let job = await Job.findById(req.params.id)
 
@@ -77,6 +77,7 @@ exports.updateJob = catchAsyncErrors(async (req, res, next) => {
 })
 
 
+// delete a job by id : route [DELETE]: /api/v1/job/5fa57b73cb8e6b0ea3be5427
 exports.deleteJob = catchAsyncErrors(async (req, res, next) => {
     let job = await Job.findById(req.params.id)
 
@@ -92,6 +93,8 @@ exports.deleteJob = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
+
+// Get a job by Id route [GET]: /api/v1/job/5fa57b73cb8e6b0ea3be5427
 exports.getJob = catchAsyncErrors(async (req, res, next) => {
     let job = await Job.findById(req.params.id)
 
@@ -106,7 +109,7 @@ exports.getJob = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-//  /api/v1/job/job_id/apply 
+// applying jobs route:   /api/v1/job/job_id/apply 
 exports.applyJob = catchAsyncErrors(async (req, res, next) => {
     // res.send('ok')
     let job = await Job.findById(req.params.id)
@@ -160,8 +163,4 @@ exports.applyJob = catchAsyncErrors(async (req, res, next) => {
             data: file.name
         })
     })
-
-
-
-
 })
