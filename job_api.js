@@ -10,11 +10,11 @@ dotenv.config({ path: './configs/api_configs.env' })
 // process.env.NODE_ENV = "production"
 
 // catching uncaught exceptions
-// process.on('uncaughtException', (error) => {
-//     console.log(`error: ${error.message}`)
-//     console.log('shutting down the server due to uncaught exception')
-//     process.exit(1)
-// })
+process.on('uncaughtException', (error) => {
+    console.log(`error: ${error.stack}`)
+    console.log('shutting down the server due to uncaught exception')
+    process.exit(1)
+})
 
 
 // gettin api config vars
@@ -31,8 +31,10 @@ job_api.use(express.json())
 // importing routes
 const jobs = require('./routes/jobs')
 const auth = require('./routes/auth')
+const user = require('./routes/users')
 job_api.use('/api/v1', jobs)
 job_api.use('/api/v1',auth)
+job_api.use('/api/v1',user)
 
 
 
@@ -62,7 +64,7 @@ const server = job_api.listen(PORT, LISTENING_IP, (error) => {
 // handling unhanbdledpromise rejections
 // something very critical is happening, needs to close server
 process.on('unhandledRejection', (error) => {
-    console.log(`error: ${error.message}`)
+    console.log(`error: ${error.stack}`)
     console.log('shutting down the server due to unhandled promise rejection')
     server.close(() => {
         process.exit(1)
