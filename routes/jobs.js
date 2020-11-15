@@ -7,7 +7,8 @@ const {
     newJob,
     jobsInRadius,
     updateJob,
-    deleteJob
+    deleteJob,
+    applyJob
  } = require('../controllers/jobsController')
 
 const { isAutheticatedUser, authorizedRoles } = require('../middlewares/auth')
@@ -19,6 +20,7 @@ router.route('/job/:id')
     .put(isAutheticatedUser, authorizedRoles(['employer', 'admin']), updateJob)
     .delete(isAutheticatedUser, authorizedRoles(['employer', 'admin']), deleteJob)
     .get(getJob)
+router.route('/job/:id/apply').put(isAutheticatedUser, authorizedRoles(['user']),applyJob)
 
     
 module.exports = router;

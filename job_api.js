@@ -7,7 +7,11 @@ const Errorhandler = require('./utils/errorHandler')
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
 
-// process.env.NODE_ENV = "production"
+const fileUpload = require('express-fileupload')
+
+
+
+
 
 // catching uncaught exceptions
 process.on('uncaughtException', (error) => {
@@ -26,6 +30,9 @@ const { conn_one } = require('./configs/database')
 conn_one()
 
 job_api.use(express.json())
+
+// handle file upload
+job_api.use(fileUpload())
 
 
 // importing routes
