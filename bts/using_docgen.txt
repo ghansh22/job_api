@@ -1,0 +1,7 @@
+1. installing docgen on linux
+>curl https://raw.githubusercontent.com/thedevsaddam/docgen/v3/install.sh -o install.sh && sudo chmod +x install.sh && sudo ./install.sh
+
+2. Export collection json from postman
+
+3. create documentation
+>docgen build -i job_api.postman_collection.json -o job-api.html
