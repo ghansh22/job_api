@@ -7,19 +7,18 @@ const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize')
 const xssClean = require('xss-clean')
+const hpp = require('hpp')
+const cors = require('cors')
 
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
 
 
-
 // file upload 
 const fileUpload = require('express-fileupload')
 
-
 // setup secutiry headers
 job_api.use(helmet())
-
 
 // avoid too many requests in very short time
 const limiter = rateLimit({
@@ -29,6 +28,8 @@ const limiter = rateLimit({
 // implement rate limiter
 job_api.use(limiter)
 
+// setup CORS - Accessible by other domains
+job_api.use(cors())
 
 // catching uncaught exceptions
 process.on('uncaughtException', (error) => {
@@ -57,6 +58,9 @@ job_api.use(mongoSanitize())
 // will return "&lt;script>&lt;/script>"
 /* make sure this comes before any routes */
 job_api.use(xssClean())
+
+// prevent HTTP Parameter Pollution attacks
+job_api.use(hpp())
 
 
 // handle file upload
