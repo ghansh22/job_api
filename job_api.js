@@ -3,12 +3,22 @@ const job_api = express()
 const dotenv = require('dotenv')
 const errorMiddleware = require('./middlewares/errors')
 const Errorhandler = require('./utils/errorHandler')
+const rateLimit = require('express-rate-limit')
+
 
 // setting up api config 
 dotenv.config({ path: './configs/api_configs.env' })
 
 // file upload 
 const fileUpload = require('express-fileupload')
+
+// avoid too many requests in very short time
+const limiter = rateLimit({
+    windowMs: 1*60*1000, // 10 minutes
+    max: process.env.MAX_REQUEST_INAMINUTE
+})
+// implement rate limiter
+job_api.use(limiter)
 
 // catching uncaught exceptions
 process.on('uncaughtException', (error) => {
